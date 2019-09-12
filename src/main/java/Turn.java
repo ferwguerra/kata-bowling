@@ -2,16 +2,14 @@ public class Turn {
     protected final int DEFAULT_SCORE_SPARE_OR_STRIKE = 10;
     protected Character firstBall;
     protected Character secondBall;
-    protected boolean isExtraTurn;
 
     public Turn() {}
 
-    public Turn(String turnString, boolean isExtraTurn) {
+    public Turn(String turnString) {
         firstBall = turnString.charAt(0);
         if (turnString.length() > 1) {
             secondBall = turnString.charAt(1);
         }
-        this.isExtraTurn = isExtraTurn;
     }
 
     public int getScore() {
@@ -43,11 +41,11 @@ public class Turn {
         return ball == '/';
     }
 
-    private boolean isStrikeBall(Character ball) {
+    protected boolean isStrikeBall(Character ball) {
         return ball == 'X';
     }
 
-    private boolean isMissBall(Character ball) {
+    protected boolean isMissBall(Character ball) {
         return ball == '-';
     }
 

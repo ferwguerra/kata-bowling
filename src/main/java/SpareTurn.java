@@ -8,7 +8,7 @@ public class SpareTurn extends Turn {
 
     public int getScore() {
         int score = DEFAULT_SCORE_SPARE_OR_STRIKE;
-        if(nextTurn != null && !nextTurn.isExtraTurn) {
+        if(nextTurn != null) {
             score += getBallValue(nextTurn.firstBall);
         }
         return score;

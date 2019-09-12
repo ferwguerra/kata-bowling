@@ -14,30 +14,31 @@ public class BowlingScoreCalculator {
 
     private List<Turn> getTurns(String game) {
         List<Turn> turns = new LinkedList<>();
-        boolean isExtraTurn = false;
 
         String[] turnsString = game.split(TURN_SEPARATOR);
 
         for (int i = 0; i < turnsString.length; i++) {
             String currentTurnString = turnsString[i];
+            Turn aTurn = new Turn(currentTurnString);
+            Turn nextTurn = getNextTurnIfExists(turnsString, i);
             Turn currentTurn;
 
-            if (isSeparatorForExtraTurn(currentTurnString)) {
-                isExtraTurn = true;
+            if (i == 9 && turnsString.length >= 9) {
+                currentTurn = new TenthTurn(aTurn, getNextTurnIfExists(turnsString, i + 1));
+                turns.add(currentTurn);
+                break;
             } else {
-                Turn nextTurn = getNextTurnIfExists(turnsString, i);
-
                 if (isSpare(currentTurnString)) {
                     currentTurn = new SpareTurn(nextTurn);
                 } else if (currentTurnString.equals("X")) {
                     Turn nextNextTurn = getNextTurnIfExists(turnsString, i + 1);
                     currentTurn = new StrikeTurn(nextTurn, nextNextTurn);
                 } else {
-                    currentTurn = new Turn(currentTurnString, isExtraTurn);
+                    currentTurn = new Turn(currentTurnString);
                 }
 
-                turns.add(currentTurn);
             }
+            turns.add(currentTurn);
 
         }
 
@@ -48,19 +49,13 @@ public class BowlingScoreCalculator {
         return currentTurn.endsWith("/");
     }
 
-    private boolean isSeparatorForExtraTurn(String currentTurn) {
-        return currentTurn.isEmpty();
-    }
-
     private Turn getNextTurnIfExists(String[] turnsString, int i) {
         Turn turn = null;
-        boolean isExtraTurn = false;
         if (hasNextTurn(turnsString, i)) {
             if (turnsString[i + 1].isEmpty()) {
-                isExtraTurn = true;
                 i = i + 1;
             }
-            turn = new Turn(turnsString[i + 1], isExtraTurn);
+            turn = new Turn(turnsString[i + 1]);
         }
         return turn;
     }
