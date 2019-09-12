@@ -1,0 +1,2 @@
+public class BowlingScoreCalculatorShould {
+}
