@@ -6,18 +6,13 @@ public class BowlingScoreCalculator {
     public static final String TURN_SEPARATOR = "\\|";
 
     public int calculateScore(String game) {
-        int score = 0;
-
-        List<Turn> turns = parseGame(game);
-
-        for (Turn turn : turns) {
-            score += turn.getScore();
-        }
-
+        int score;
+        List<Turn> turns = getTurns(game);
+        score = turns.stream().mapToInt(Turn::getScore).sum();
         return score;
     }
 
-    private List<Turn> parseGame(String game) {
+    private List<Turn> getTurns(String game) {
         List<Turn> turns = new LinkedList<>();
         boolean isExtraTurn = false;
 
@@ -26,19 +21,19 @@ public class BowlingScoreCalculator {
         for (int i = 0; i < turnsString.length; i++) {
             String currentTurn = turnsString[i];
 
-            if(!currentTurn.isEmpty()) {
+            if (isSeparatorForExtraTurn(currentTurn)) {
+                isExtraTurn = true;
+            } else {
                 Turn nextTurn = getNextTurnIfExists(turnsString, i);
-                Turn nextNextTurn = getNextTurnIfExists(turnsString, i + 1);
 
-                if (currentTurn.endsWith("/")) {
+                if (isSpare(currentTurn)) {
                     turns.add(new SpareTurn(nextTurn));
                 } else if (currentTurn.equals("X")) {
+                    Turn nextNextTurn = getNextTurnIfExists(turnsString, i + 1);
                     turns.add(new StrikeTurn(nextTurn, nextNextTurn));
                 } else {
                     turns.add(new Turn(currentTurn, isExtraTurn));
                 }
-            } else {
-                isExtraTurn = true;
             }
 
         }
@@ -46,11 +41,19 @@ public class BowlingScoreCalculator {
         return turns;
     }
 
+    private boolean isSpare(String currentTurn) {
+        return currentTurn.endsWith("/");
+    }
+
+    private boolean isSeparatorForExtraTurn(String currentTurn) {
+        return currentTurn.isEmpty();
+    }
+
     private Turn getNextTurnIfExists(String[] turnsString, int i) {
         Turn turn = null;
         boolean isExtraTurn = false;
         if (hasNextTurn(turnsString, i)) {
-            if(turnsString[i + 1].isEmpty()) {
+            if (turnsString[i + 1].isEmpty()) {
                 isExtraTurn = true;
                 i = i + 1;
             }

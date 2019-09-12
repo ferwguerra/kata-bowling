@@ -2,13 +2,13 @@ public class StrikeTurn extends Turn {
 
     private Character nextFirstBall;
     private Character nextSecondBall;
-    private boolean isNextBallExtra;
+    private boolean isNextExtraBall;
 
     public StrikeTurn(Turn nextTurn, Turn nextNextTurn) {
-        if (nextTurn != null) {
+        if (hasNextTurn(nextTurn)) {
             this.nextFirstBall = nextTurn.firstBall;
-            this.isNextBallExtra = nextTurn.isExtraTurn;
-            if (nextTurn.secondBall != null) {
+            this.isNextExtraBall = nextTurn.isExtraTurn;
+            if (!isStrike(nextTurn)) {
                 this.nextSecondBall = nextTurn.secondBall;
             } else {
                 nextSecondBall = nextNextTurn.firstBall;
@@ -16,23 +16,29 @@ public class StrikeTurn extends Turn {
         }
     }
 
+    private boolean hasNextTurn(Turn nextTurn) {
+        return nextTurn != null;
+    }
+
     public int getScore() {
         int score = DEFAULT_SCORE_SPARE_OR_STRIKE;
 
-        if (!isExtraBall()) {
-            if (nextSecondBall == '/') {
+        if (!isExtraTurn()) {
+
+            if (isSpareBall(nextSecondBall)) {
                 score += DEFAULT_SCORE_SPARE_OR_STRIKE;
             } else {
-                if (!isNextBallExtra) {
+                if (!isNextExtraBall) {
                     score += getBallValue(nextFirstBall) + getBallValue(nextSecondBall);
                 }
             }
+
         }
 
         return score;
     }
 
-    private boolean isExtraBall() {
+    private boolean isExtraTurn() {
         return nextFirstBall == null;
     }
 }
