@@ -19,21 +19,24 @@ public class BowlingScoreCalculator {
         String[] turnsString = game.split(TURN_SEPARATOR);
 
         for (int i = 0; i < turnsString.length; i++) {
-            String currentTurn = turnsString[i];
+            String currentTurnString = turnsString[i];
+            Turn currentTurn;
 
-            if (isSeparatorForExtraTurn(currentTurn)) {
+            if (isSeparatorForExtraTurn(currentTurnString)) {
                 isExtraTurn = true;
             } else {
                 Turn nextTurn = getNextTurnIfExists(turnsString, i);
 
-                if (isSpare(currentTurn)) {
-                    turns.add(new SpareTurn(nextTurn));
-                } else if (currentTurn.equals("X")) {
+                if (isSpare(currentTurnString)) {
+                    currentTurn = new SpareTurn(nextTurn);
+                } else if (currentTurnString.equals("X")) {
                     Turn nextNextTurn = getNextTurnIfExists(turnsString, i + 1);
-                    turns.add(new StrikeTurn(nextTurn, nextNextTurn));
+                    currentTurn = new StrikeTurn(nextTurn, nextNextTurn);
                 } else {
-                    turns.add(new Turn(currentTurn, isExtraTurn));
+                    currentTurn = new Turn(currentTurnString, isExtraTurn);
                 }
+
+                turns.add(currentTurn);
             }
 
         }
