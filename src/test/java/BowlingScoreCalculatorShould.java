@@ -36,6 +36,7 @@ public class BowlingScoreCalculatorShould {
                 new Object[]{"--|--|--|--|--|--|--|--|--|X||12", 13},
                 new Object[]{"--|--|--|--|--|--|--|--|--|X||X2", 22},
                 new Object[]{"--|--|--|--|--|--|--|--|--|X||XX", 30},
+                new Object[]{"X||3/", 20},
                 new Object[]{"--|--|--|--|--|--|--|--|X|X||XX", 60},
                 new Object[]{"X|X|X|X|X|X|X|X|X|X||XX", 300},
                 new Object[]{"X|7/|9-|X|-8|8/|-6|X|X|X||81", 167}

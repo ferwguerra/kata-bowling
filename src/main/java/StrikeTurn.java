@@ -8,7 +8,7 @@ public class StrikeTurn extends Turn {
         if (hasNextTurn(nextTurn)) {
             this.nextFirstBall = nextTurn.firstBall;
             this.isNextExtraBall = nextTurn.isExtraTurn;
-            if (!isStrike(nextTurn)) {
+            if (!nextTurn.isStrike()) {
                 this.nextSecondBall = nextTurn.secondBall;
             } else {
                 nextSecondBall = nextNextTurn.firstBall;
@@ -25,7 +25,7 @@ public class StrikeTurn extends Turn {
 
         if (!isExtraTurn()) {
 
-            if (isSpareBall(nextSecondBall)) {
+            if (isSpareBall(nextSecondBall) && !isNextExtraBall) {
                 score += DEFAULT_SCORE_SPARE_OR_STRIKE;
             } else {
                 if (!isNextExtraBall) {

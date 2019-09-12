@@ -35,8 +35,8 @@ public class Turn {
         return value;
     }
 
-    protected boolean isStrike(Turn turn) {
-        return turn.secondBall == null;
+    protected boolean isStrike() {
+        return this.secondBall == null;
     }
 
     protected boolean isSpareBall(Character ball) {
