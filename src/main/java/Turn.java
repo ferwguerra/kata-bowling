@@ -3,32 +3,31 @@ public class Turn {
     protected Character firstBall;
     protected Character secondBall;
 
-    public Turn() {}
+    public Turn() {
+    }
 
     public Turn(String turnString) {
         firstBall = turnString.charAt(0);
-        if (turnString.length() > 1) {
+        if (!isStrike(turnString)) {
             secondBall = turnString.charAt(1);
         }
     }
+
 
     public int getScore() {
         return getBallValue(firstBall) + getBallValue(secondBall);
     }
 
     protected int getBallValue(Character ball) {
-        int value = 0;
+        int value;
 
-        if(ball != null) {
-            if (isMissBall(ball)) {
-                value = 0;
-            } else if (isStrikeBall(ball) || isSpareBall(ball)) {
-                value = DEFAULT_SCORE_SPARE_OR_STRIKE;
-            } else {
-                value = Character.getNumericValue(ball);
-            }
+        if (isMissBall(ball)) {
+            value = 0;
+        } else if (isStrikeBall(ball) || isSpareBall(ball)) {
+            value = DEFAULT_SCORE_SPARE_OR_STRIKE;
+        } else {
+            value = Character.getNumericValue(ball);
         }
-
 
         return value;
     }
@@ -49,4 +48,7 @@ public class Turn {
         return ball == '-';
     }
 
+    protected boolean isStrike(String turnString) {
+        return turnString.length() == 1;
+    }
 }

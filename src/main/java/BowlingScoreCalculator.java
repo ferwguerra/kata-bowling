@@ -1,9 +1,11 @@
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BowlingScoreCalculator {
 
     public static final String TURN_SEPARATOR = "\\|";
+    public static final int NUMBER_OF_TURNS = 10;
 
     public int calculateScore(String game) {
         int score;
@@ -13,54 +15,63 @@ public class BowlingScoreCalculator {
     }
 
     private List<Turn> getTurns(String game) {
-        List<Turn> turns = new LinkedList<>();
+        List<String> turnsString = Arrays.asList(game.split(TURN_SEPARATOR));
+        return buildTurns(turnsString);
+    }
 
-        String[] turnsString = game.split(TURN_SEPARATOR);
+    private List<Turn> buildTurns(List<String> turnsString) {
+        List<Turn> turns = new ArrayList<>();
 
-        for (int i = 0; i < turnsString.length; i++) {
-            String currentTurnString = turnsString[i];
-            Turn aTurn = new Turn(currentTurnString);
-            Turn nextTurn = getNextTurnIfExists(turnsString, i);
-            Turn currentTurn;
+        for (int turnNumber = 0; turnNumber < NUMBER_OF_TURNS; turnNumber++) {
+            String turnString = turnsString.get(turnNumber);
 
-            if (i == 9 && turnsString.length >= 9) {
-                currentTurn = new TenthTurn(aTurn, getNextTurnIfExists(turnsString, i + 1));
-                turns.add(currentTurn);
-                break;
-            } else {
-                if (isSpare(currentTurnString)) {
-                    currentTurn = new SpareTurn(nextTurn);
-                } else if (currentTurnString.equals("X")) {
-                    Turn nextNextTurn = getNextTurnIfExists(turnsString, i + 1);
-                    currentTurn = new StrikeTurn(nextTurn, nextNextTurn);
+            if (!isExtraBallSeparator(turnString)) {
+                Turn turn;
+                if (isTenthTurn(turnNumber)) {
+                    turn = new TenthTurn(new Turn(turnString), getNextTurnIfExists(turnsString, turnNumber + 1));
+                } else if (isSpare(turnString)) {
+                    turn = new SpareTurn(getNextTurnIfExists(turnsString, turnNumber));
+                } else if (isStrike(turnString)) {
+                    turn = new StrikeTurn(getNextTurnIfExists(turnsString, turnNumber), getNextTurnIfExists(turnsString, turnNumber + 1));
                 } else {
-                    currentTurn = new Turn(currentTurnString);
+                    turn = new Turn(turnString);
                 }
-
+                turns.add(turn);
             }
-            turns.add(currentTurn);
-
         }
 
         return turns;
+    }
+
+    private boolean isExtraBallSeparator(String turnsString) {
+        return turnsString.isEmpty();
+    }
+
+    private boolean isTenthTurn(int index) {
+        return index == 9;
+    }
+
+    private boolean isStrike(String currentTurn) {
+        return currentTurn.equals("X");
     }
 
     private boolean isSpare(String currentTurn) {
         return currentTurn.endsWith("/");
     }
 
-    private Turn getNextTurnIfExists(String[] turnsString, int i) {
+    private Turn getNextTurnIfExists(List<String> turnsString, int index) {
         Turn turn = null;
-        if (hasNextTurn(turnsString, i)) {
-            if (turnsString[i + 1].isEmpty()) {
-                i = i + 1;
+
+        if (hasNextTurn(turnsString, index)) {
+            if (turnsString.get(index + 1).isEmpty()) {
+                index = index + 1;
             }
-            turn = new Turn(turnsString[i + 1]);
+            turn = new Turn(turnsString.get(index + 1));
         }
         return turn;
     }
 
-    private boolean hasNextTurn(String[] turnsString, int position) {
-        return turnsString.length > position + 1;
+    private boolean hasNextTurn(List<String> turnsString, int index) {
+        return turnsString.size() > index + 1;
     }
 }

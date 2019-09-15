@@ -4,18 +4,13 @@ public class StrikeTurn extends Turn {
     private Character nextSecondBall;
 
     public StrikeTurn(Turn nextTurn, Turn nextNextTurn) {
-        if (hasNextTurn(nextTurn)) {
-            this.nextFirstBall = nextTurn.firstBall;
-            if (!nextTurn.isStrike()) {
-                this.nextSecondBall = nextTurn.secondBall;
-            } else {
-                nextSecondBall = nextNextTurn.firstBall;
-            }
-        }
-    }
+        nextFirstBall = nextTurn.firstBall;
 
-    private boolean hasNextTurn(Turn nextTurn) {
-        return nextTurn != null;
+        if (isStrikeBall(nextFirstBall)) {
+            nextSecondBall = nextNextTurn.firstBall;
+        } else {
+            nextSecondBall = nextTurn.secondBall;
+        }
     }
 
     public int getScore() {
@@ -26,7 +21,6 @@ public class StrikeTurn extends Turn {
         } else {
             score += getBallValue(nextFirstBall) + getBallValue(nextSecondBall);
         }
-
 
         return score;
     }
