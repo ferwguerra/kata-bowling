@@ -1,3 +1,8 @@
+import domain.SpareTurn;
+import domain.StrikeTurn;
+import domain.TenthTurn;
+import domain.Turn;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,17 +27,17 @@ public class BowlingScoreCalculator {
     private List<Turn> buildTurns(List<String> turnsString) {
         List<Turn> turns = new ArrayList<>();
 
-        for (int turnNumber = 0; turnNumber < NUMBER_OF_TURNS; turnNumber++) {
-            String turnString = turnsString.get(turnNumber);
+        for (int currentTurnNumber = 0; currentTurnNumber < NUMBER_OF_TURNS; currentTurnNumber++) {
+            String turnString = turnsString.get(currentTurnNumber);
 
             if (!isExtraBallSeparator(turnString)) {
                 Turn turn;
-                if (isTenthTurn(turnNumber)) {
-                    turn = new TenthTurn(new Turn(turnString), getNextTurnIfExists(turnsString, turnNumber + 1));
+                if (isTenthTurn(currentTurnNumber)) {
+                    turn = new TenthTurn(new Turn(turnString), getNextTurnToTurnNumber(currentTurnNumber + 1, turnsString));
                 } else if (isSpare(turnString)) {
-                    turn = new SpareTurn(getNextTurnIfExists(turnsString, turnNumber));
+                    turn = new SpareTurn(getNextTurnToTurnNumber(currentTurnNumber, turnsString));
                 } else if (isStrike(turnString)) {
-                    turn = new StrikeTurn(getNextTurnIfExists(turnsString, turnNumber), getNextTurnIfExists(turnsString, turnNumber + 1));
+                    turn = new StrikeTurn(getNextTurnToTurnNumber(currentTurnNumber, turnsString), getNextTurnToTurnNumber(currentTurnNumber + 1, turnsString));
                 } else {
                     turn = new Turn(turnString);
                 }
@@ -59,19 +64,20 @@ public class BowlingScoreCalculator {
         return currentTurn.endsWith("/");
     }
 
-    private Turn getNextTurnIfExists(List<String> turnsString, int index) {
+    private Turn getNextTurnToTurnNumber(int turnNumber, List<String> turnsString) {
         Turn turn = null;
+        int nextTurnNumber = turnNumber + 1;
 
-        if (hasNextTurn(turnsString, index)) {
-            if (turnsString.get(index + 1).isEmpty()) {
-                index = index + 1;
+        if (hasNextTurn(turnsString, turnNumber)) {
+            if (isExtraBallSeparator(turnsString.get(nextTurnNumber))) {
+                nextTurnNumber += 1;
             }
-            turn = new Turn(turnsString.get(index + 1));
+            turn = new Turn(turnsString.get(nextTurnNumber));
         }
         return turn;
     }
 
-    private boolean hasNextTurn(List<String> turnsString, int index) {
-        return turnsString.size() > index + 1;
+    private boolean hasNextTurn(List<String> turnsString, int currentTurnNumber) {
+        return turnsString.size() > currentTurnNumber + 1;
     }
 }

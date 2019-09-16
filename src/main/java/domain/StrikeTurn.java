@@ -1,3 +1,5 @@
+package domain;
+
 public class StrikeTurn extends Turn {
 
     private Character nextFirstBall;
@@ -19,7 +21,7 @@ public class StrikeTurn extends Turn {
         if (isSpareBall(nextSecondBall)) {
             score += DEFAULT_SCORE_SPARE_OR_STRIKE;
         } else {
-            score += getBallValue(nextFirstBall) + getBallValue(nextSecondBall);
+            score += getScoreBall(nextFirstBall) + getScoreBall(nextSecondBall);
         }
 
         return score;

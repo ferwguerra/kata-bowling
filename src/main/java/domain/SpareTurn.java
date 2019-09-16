@@ -1,3 +1,5 @@
+package domain;
+
 public class SpareTurn extends Turn {
 
     private Turn nextTurn;
@@ -9,7 +11,7 @@ public class SpareTurn extends Turn {
     public int getScore() {
         int score = DEFAULT_SCORE_SPARE_OR_STRIKE;
         if(nextTurn != null) {
-            score += getBallValue(nextTurn.firstBall);
+            score += getScoreBall(nextTurn.firstBall);
         }
         return score;
     }

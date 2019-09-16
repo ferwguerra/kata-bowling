@@ -1,3 +1,5 @@
+package domain;
+
 public class Turn {
     protected final int DEFAULT_SCORE_SPARE_OR_STRIKE = 10;
     protected Character firstBall;
@@ -15,10 +17,10 @@ public class Turn {
 
 
     public int getScore() {
-        return getBallValue(firstBall) + getBallValue(secondBall);
+        return getScoreBall(firstBall) + getScoreBall(secondBall);
     }
 
-    protected int getBallValue(Character ball) {
+    protected int getScoreBall(Character ball) {
         int value;
 
         if (isMissBall(ball)) {
